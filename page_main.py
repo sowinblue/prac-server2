@@ -3,7 +3,7 @@ html_main = '''
             <html>
             <head>
                 <meta charset="UTF-8">
-                <title>사랑연대기</title>
+                <title>사마죄</title>
             </head>
             <center>
             <body>
