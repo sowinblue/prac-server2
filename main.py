@@ -16,10 +16,11 @@ class myhandler(BaseHTTPRequestHandler):
         </head>
         <body>
             <h1> 좋아하는 장르를 적어봐! </h1>
+        <form methon="GET">
             <label for="genre"> 장르 </label>
             <input type="text" id="genre placeholder="장르 입력">
             <button>등록</button>
-            
+        </form>
         </body>
         </html>
         '''
