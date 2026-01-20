@@ -25,7 +25,6 @@ class myhandler(BaseHTTPRequestHandler):
             html = html_mid
         elif keyword =="후기":
             html = html_late
-            # 🔹 3) 입력이 없으면 처음 페이지 표시
         else:
             html = f'''
             <!DOCTYPE html>
