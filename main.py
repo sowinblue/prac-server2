@@ -4,6 +4,7 @@ from page_main import html_main
 from page_early import html_early
 from page_mid import html_mid
 from page_late import html_late
+from page_ex import no_keyword
 
 class myhandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -26,57 +27,10 @@ class myhandler(BaseHTTPRequestHandler):
         elif keyword =="후기":
             html = html_late
         else:
-            html = f'''
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>검색 결과 없음</title>
-            </head>
-            <body>
-                <h1>검색 결과가 없습니다: {keyword}</h1>
-                <a href="/">처음으로 돌아가기</a>
-            </body>
-            </html>
-            '''
+            html = no_keyword(keyword)
         
-
         self.wfile.write(html.encode('utf-8'))
 
-    comments = {
-    "초기": [],      # [{"id": 1, "text": "댓글1"}, ...]
-    "과도기": [],
-    "후기": []
-    }
-    next_id = 1  # 댓글 고유 ID
-
-    def do_POST(self):
-        length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(length).decode('utf-8')
-        params = parse_qs(post_data)
-
-        action = params.get("action", [""])[0]
-        keyword = params.get("keyword", [""])[0]
-        comment_id = int(params.get("id", [0])[0])
-        text = params.get("text", [""])[0]
-
-        cls = self.__class__
-        
-        if action == "add":
-            cls.comments[keyword].append({"id": cls.next_id, "text": text})
-            cls.next_id += 1
-        elif action == "delete":
-            cls.comments[keyword] = [c for c in cls.comments[keyword] if c["id"] != comment_id]
-        elif action == "edit":
-            for c in cls.comments[keyword]:
-                if c["id"] == comment_id:
-                    c["text"] = text
-                    break
-
-        # 처리 후 해당 장르 페이지로 리다이렉트
-        self.send_response(303)  # 303 Redirect
-        self.send_header('Location', f'/?keyword={keyword}')
-        self.end_headers()
 
 host = 'localhost'
 port = 8000
