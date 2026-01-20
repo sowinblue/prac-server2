@@ -6,7 +6,7 @@ html_early = '''
                 <title>초기</title>
             </head>
             <body>
-                <a href="/">처음으로 돌아가기</a>
+                <a href="/" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">처음으로 돌아가기</a>
             </body>
             </html>
             '''
