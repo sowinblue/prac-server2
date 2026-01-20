@@ -7,7 +7,9 @@ html_late='''
             </head>
             <body>
                 <a href="/" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">처음으로 돌아가기</a>
+                <center>
                 <h1>후기</h1>
+                </center>
             </body>
             </html>
             '''
