@@ -9,8 +9,9 @@ html_late='''
                 <a href="/" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">처음으로 돌아가기</a>
                 <center>
                 <h1>후기</h1>
-                <img src=/static/late.png alt="[SynthV] 카사네 테토" style="width:20%; border-radius: 8px;">
+                <img src="https://i.namu.wiki/i/BA2vUlqtM1l-ADAILr0FH2xO262TwRap_2cBZ-RSyUCnGBDCOk7146oNVjUA4EwlfT-t21KUsRi0QTTzp69qpYhg37pAPTgFpZU3g_yZ-V3N7USITcdsDhw612U7fiQyJ2lFnzdnzK_RqauLRd1fpA.webp" alt="[SynthV] 카사네 테토" style="width:20%; border-radius: 8px;">
                 <h2>[SynthV] 카사네 테토</h2>
+                <p> 출처: AHS-Soft
                 </center>
             </body>
             </html>
