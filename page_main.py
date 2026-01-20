@@ -7,12 +7,23 @@ html_main = '''
             </head>
             <center>
             <body>
-                <h1>연대기</h1>
-                <ul style="display: flex; flex-direction: column; align-items: center; padding-left: 0;">
-                    <li style="list-style: disc; margin-left: 20px;"><a href="/?keyword=초기">아기 덕후 시절</a></li>
-                    <li style="list-style: disc; margin-left: 20px;"><a href="/?keyword=과도기">폭풍의 덕후 시절</a></li>
-                    <li style="list-style: disc; margin-left: 20px;"><a href="/?keyword=후기">프로 덕후의 선택</a></li>
-                </ul>
+                <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+
+                border: 1px solid #ccc;
+                padding: 16px;
+                width: 300px;
+                margin: 40px auto;
+                background-color: #ffffff;
+                ">
+                <p1><strong>연대기</strong></p1>
+                    <a href="/?keyword=초기" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">아기 덕후 시절</a>
+                    <a href="/?keyword=과도기" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">폭풍의 덕후 시절</a>
+                    <a href="/?keyword=후기" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">프로 덕후의 선택</a>
+                </div>
 
                 <form method="GET">
                     <label for="keyword">검색</label>
