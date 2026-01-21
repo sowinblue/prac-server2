@@ -8,6 +8,22 @@ from page_ex import no_keyword
 
 class myhandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        if self.path.startswith("/static/"):
+            file_path = "." + self.path  # 예: ./static/mid.png
+            try:
+                with open(file_path, "rb") as f:
+                    self.send_response(200)
+                    if file_path.endswith(".png"):
+                        self.send_header("Content-type", "image/png")
+                    elif file_path.endswith(".jpg") or file_path.endswith(".jpeg"):
+                        self.send_header("Content-type", "image/jpeg")
+                    self.end_headers()
+                    self.wfile.write(f.read())
+            except FileNotFoundError:
+                self.send_response(404)
+                self.end_headers()
+            return
+        
         
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
