@@ -7,6 +7,30 @@ from page_late import html_late
 from page_ex import no_keyword
 
 class myhandler(BaseHTTPRequestHandler):
+    comments = []  # [{"id":1, "text":"댓글내용"}, ...]
+    next_id = 1
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+        params = parse_qs(post_data)
+        comment_text = params.get('comment', [''])[0]
+
+        if comment_text:
+            # 댓글 추가
+            self.__class__.comments.append({
+                "id": self.__class__.next_id,
+                "text": comment_text
+            })
+            self.__class__.next_id += 1
+
+        # 작성 후 메인페이지로 리다이렉트
+        self.send_response(303)
+        self.send_header('Location', '/')
+        self.end_headers()
+
+
+
     def do_GET(self):
         if self.path.startswith("/static/"):
             file_path = "." + self.path  # 예: ./static/mid.png
@@ -24,10 +48,16 @@ class myhandler(BaseHTTPRequestHandler):
                 self.end_headers()
             return
         
-        
+
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
         keyword = params.get("keyword", [""])[0]  # 입력값 없으면 빈 문자열
+        delete_id = params.get("delete", [""])[0]
+        
+        if delete_id:
+            self.__class__.comments = [
+                c for c in self.__class__.comments if str(c["id"]) != delete_id
+            ]
 
 
         self.send_response(200)
@@ -46,6 +76,49 @@ class myhandler(BaseHTTPRequestHandler):
         else:
             html = no_keyword(keyword)
         
+        #메인 페이지만
+        # 메인 페이지만 댓글 렌더링
+        if not keyword:
+
+            comment_html = """
+                <hr>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+
+                    padding: 16px;
+                    width: 300px;
+                    margin: 40px auto;
+                    background-color: #ffffff;
+                ">
+                    <h3>댓글</h3>
+                    <ul style="list-style:none; padding:0;">
+            """
+
+            # 댓글 리스트
+            for c in self.__class__.comments:
+                comment_html += f"""
+                <li>
+                    {c['text']}
+                    <a href="/?delete={c['id']}">삭제</a>
+                </li>
+                """
+
+            # 닫기 + 입력폼
+            comment_html += """
+                    </ul>
+                    <form method="POST">
+                        <input name="comment">
+                        <button>등록</button>
+                    </form>
+                </div>
+            """
+
+            html += comment_html
+
+
         self.wfile.write(html.encode('utf-8'))
 
 
