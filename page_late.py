@@ -8,8 +8,8 @@ html_late='''
             <body>
                 <a href="/" style="display:inline-block; padding:6px 12px; background-color:#eee; border:1px solid #ccc; border-radius:4px; text-decoration:none; color:black;">처음으로 돌아가기</a>
                 <center>
-                <h1>후기</h1>
-                    <div style="width:300px; height:200px; overflow:hidden; border-radius:8px;">
+                <h1 style="font-size:40px;">후기</h1>
+                    <div style="width:50%; height:50%; overflow:hidden; border-radius:8px;">
                     <img
                         src="/static/late.png"
                         alt="카사네 테토"
