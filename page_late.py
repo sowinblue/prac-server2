@@ -24,6 +24,7 @@ html_late='''
                     이미지 출처: 카사네 테토 © Twindrill / AHS
                     </figcaption>
                     </div>
+                    <p style="text-align:center;"> 나의 메인 보컬</p>
             </body>
             </html>
             '''

@@ -24,7 +24,7 @@ html_mid = '''
                     이미지 출처 하츠네 미쿠 © Crypton Future Media, INC.py
                     </figcaption>
                     </div>
-
+                    <p style="text-align:center;"> 서브 컬처 음악의 세계로 이끌다</p>
             </body>
             </html>
             '''
