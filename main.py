@@ -1,10 +1,14 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs 
+from urllib.parse import urlparse, parse_qs
+from datetime import datetime
 from page_main import html_main
 from page_early import html_early
 from page_mid import html_mid
 from page_late import html_late
 from page_ex import no_keyword
+
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 
 class myhandler(BaseHTTPRequestHandler):
     comments = []  # [{"id":1, "text":"댓글내용"}, ...]
@@ -15,20 +19,29 @@ class myhandler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length).decode('utf-8')
         params = parse_qs(post_data)
         comment_text = params.get('comment', [''])[0]
+        edit_id = params.get('edit_id', [''])[0]
 
-        if comment_text:
-            # 댓글 추가
-            type(self).comments.append({
-                "id": type(self).next_id,
-                "text": comment_text
-            })
-            type(self).next_id += 1
+
+        if comment_text:  # 내용이 있으면 처리
+            if edit_id:  # 수정 모드
+                for c in type(self).comments:
+                    if str(c["id"]) == edit_id:
+                        c["text"] = comment_text # 그 자리에서 수정
+                        c["edited_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+            else:  # 새 댓글 추가
+                type(self).comments.append({
+                    "id": type(self).next_id,
+                    "text": comment_text,
+                    "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # 생성 시간
+                    "edited_at": None
+
+                })
+                type(self).next_id += 1
 
         # 작성 후 메인페이지로 리다이렉트
         self.send_response(303)
         self.send_header('Location', '/')
         self.end_headers()
-
 
 
     def do_GET(self):
@@ -52,8 +65,15 @@ class myhandler(BaseHTTPRequestHandler):
         params = parse_qs(parsed.query)
         keyword = params.get("keyword", [""])[0]  # 입력값 없으면 빈 문자열
         delete_id = params.get("delete", [""])[0]
+        edit_id = params.get('edit', [''])[0]
         
-        
+        edit_text = ""
+        if edit_id:
+            # 수정할 댓글 찾아서 input에 미리 채움
+            for c in type(self).comments:
+                if str(c["id"]) == edit_id:
+                    edit_text = c["text"]
+
 
         if delete_id:
             for c in type(self).comments:
@@ -99,32 +119,36 @@ class myhandler(BaseHTTPRequestHandler):
                     background-color: #ffffff;
                 ">
                     <h3>댓글</h3>
-                    <ul style="list-style:none; padding:0;">
+                    <div style="width: 100%; text-align: center;">
+                    <ul style="list-style:none; padding:0; margin:0;">
             """
 
             
-
+            comment_html += '<div style="width:100%; text-align:center;"><ul style="list-style:none; padding-left:0; margin:0;">'
             # 댓글 렌더링
             for c in type(self).comments:
-                comment_html += f"""
-                <li>
-                    {c['text']}
-                    <a href="/?delete={c['id']}">삭제</a>
-                </li>
-                """
+                comment_html += "<li>"
+                comment_html += c['text']  # 삭제 표시 포함
+                # 삭제되지 않은 댓글만 삭제 버튼 표시
+                time_str = c['edited_at'] if c['edited_at'] else c['created_at']
+                edited_label = " (수정됨)" if c['edited_at'] else ""
+                comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
 
-                
+                if "삭제된 댓글입니다" not in c['text']:
+                    comment_html += f' <a href="/?delete={c["id"]}">삭제</a>'
+                    comment_html += f' <a href="/?edit={c["id"]}">수정</a>'
+                comment_html += "</li>"
+            comment_html += "</ul></div>"
 
-            comment_html += "</ul>"
-            # 삭제 메시지 붙이기
         
                 
             # 닫기 + 입력폼
-        comment_html += """
+        comment_html += f"""
                 </ul>
-                <form method="POST">
-                    <input name="comment">
-                    <button>등록</button>
+                <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
+                    <input name="comment" value="{edit_text}">
+                    {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
+                    <button>{'수정' if edit_id else '등록'}</button>
                 </form>
             </div>
         """
