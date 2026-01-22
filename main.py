@@ -48,17 +48,24 @@ class myhandler(BaseHTTPRequestHandler):
                 self.end_headers()
             return
         
-
+        deleted_message_html = ""
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
         keyword = params.get("keyword", [""])[0]  # 입력값 없으면 빈 문자열
         delete_id = params.get("delete", [""])[0]
+        
+
         
         if delete_id:
             type(self).comments = [
                 c for c in type(self).comments if str(c["id"]) != delete_id
             ]
 
+            deleted_message_html = f"""
+                <div style="color:red; text-decoration: line-through; text-align:center; margin: 8px 0;">
+                    삭제된 댓글입니다
+                </div>
+                """
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
@@ -75,6 +82,7 @@ class myhandler(BaseHTTPRequestHandler):
             html = html_late
         else:
             html = no_keyword(keyword)
+        
         
         #메인 페이지만
         # 메인 페이지만 댓글 렌더링
@@ -106,17 +114,22 @@ class myhandler(BaseHTTPRequestHandler):
                 </li>
                 """
 
-            # 닫기 + 입력폼
-            comment_html += """
-                    </ul>
-                    <form method="POST">
-                        <input name="comment">
-                        <button>등록</button>
-                    </form>
-                </div>
-            """
+        comment_html += "</ul>"
+        # 삭제 메시지 붙이기
+        comment_html += deleted_message_html
 
-            html += comment_html
+                
+            # 닫기 + 입력폼
+        comment_html += """
+                </ul>
+                <form method="POST">
+                    <input name="comment">
+                    <button>등록</button>
+                </form>
+            </div>
+        """
+
+        html += comment_html
 
 
         self.wfile.write(html.encode('utf-8'))
