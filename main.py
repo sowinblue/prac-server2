@@ -48,24 +48,19 @@ class myhandler(BaseHTTPRequestHandler):
                 self.end_headers()
             return
         
-        deleted_message_html = ""
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
         keyword = params.get("keyword", [""])[0]  # 입력값 없으면 빈 문자열
         delete_id = params.get("delete", [""])[0]
         
-
         
-        if delete_id:
-            type(self).comments = [
-                c for c in type(self).comments if str(c["id"]) != delete_id
-            ]
 
-            deleted_message_html = f"""
-                <div style="color:red; text-decoration: line-through; text-align:center; margin: 8px 0;">
-                    삭제된 댓글입니다
-                </div>
-                """
+        if delete_id:
+            for c in type(self).comments:
+                if str(c["id"]) == delete_id:
+            # 삭제 표시로 바꿈
+                    c["text"] = f'<span style="color:red; text-decoration: line-through;">삭제된 댓글입니다</span>'
+
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
@@ -84,6 +79,8 @@ class myhandler(BaseHTTPRequestHandler):
             html = no_keyword(keyword)
         
         
+        
+
         #메인 페이지만
         # 메인 페이지만 댓글 렌더링
         if not keyword:
@@ -105,7 +102,9 @@ class myhandler(BaseHTTPRequestHandler):
                     <ul style="list-style:none; padding:0;">
             """
 
-            # 댓글 리스트
+            
+
+            # 댓글 렌더링
             for c in type(self).comments:
                 comment_html += f"""
                 <li>
@@ -114,10 +113,11 @@ class myhandler(BaseHTTPRequestHandler):
                 </li>
                 """
 
-        comment_html += "</ul>"
-        # 삭제 메시지 붙이기
-        comment_html += deleted_message_html
+                
 
+            comment_html += "</ul>"
+            # 삭제 메시지 붙이기
+        
                 
             # 닫기 + 입력폼
         comment_html += """
@@ -128,6 +128,7 @@ class myhandler(BaseHTTPRequestHandler):
                 </form>
             </div>
         """
+
 
         html += comment_html
 
