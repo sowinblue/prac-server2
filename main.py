@@ -18,11 +18,11 @@ class myhandler(BaseHTTPRequestHandler):
 
         if comment_text:
             # 댓글 추가
-            self.__class__.comments.append({
-                "id": self.__class__.next_id,
+            type(self).comments.append({
+                "id": type(self).next_id,
                 "text": comment_text
             })
-            self.__class__.next_id += 1
+            type(self).next_id += 1
 
         # 작성 후 메인페이지로 리다이렉트
         self.send_response(303)
@@ -55,8 +55,8 @@ class myhandler(BaseHTTPRequestHandler):
         delete_id = params.get("delete", [""])[0]
         
         if delete_id:
-            self.__class__.comments = [
-                c for c in self.__class__.comments if str(c["id"]) != delete_id
+            type(self).comments = [
+                c for c in type(self).comments if str(c["id"]) != delete_id
             ]
 
 
@@ -98,7 +98,7 @@ class myhandler(BaseHTTPRequestHandler):
             """
 
             # 댓글 리스트
-            for c in self.__class__.comments:
+            for c in type(self).comments:
                 comment_html += f"""
                 <li>
                     {c['text']}
