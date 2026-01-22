@@ -63,10 +63,11 @@ class myhandler(BaseHTTPRequestHandler):
         
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
-        keyword = params.get("keyword", [""])[0]  # 입력값 없으면 빈 문자열
+        keyword = params.get("keyword", [""])[0]
+        print("keyword:", keyword)  # 입력값 없으면 빈 문자열
         delete_id = params.get("delete", [""])[0]
         edit_id = params.get('edit', [''])[0]
-        
+        comment_html = ""
         edit_text = ""
         if edit_id:
             # 수정할 댓글 찾아서 input에 미리 채움
@@ -121,10 +122,22 @@ class myhandler(BaseHTTPRequestHandler):
                     <h3>댓글</h3>
                     <div style="width: 100%; text-align: center;">
                     <ul style="list-style:none; padding:0; margin:0;">
+                    </div>
             """
 
             
             comment_html += '<div style="width:100%; text-align:center;"><ul style="list-style:none; padding-left:0; margin:0;">'
+
+            comment_html += f"""
+                </ul>
+                <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
+                    <input name="comment" value="{edit_text}">
+                    {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
+                    <button>{'수정' if edit_id else '등록'}</button>
+                </form>
+            </div>
+        """
+            
             # 댓글 렌더링
             for c in type(self).comments:
                 comment_html += "<li>"
@@ -146,15 +159,7 @@ class myhandler(BaseHTTPRequestHandler):
         
                 
             # 닫기 + 입력폼
-        comment_html += f"""
-                </ul>
-                <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
-                    <input name="comment" value="{edit_text}">
-                    {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
-                    <button>{'수정' if edit_id else '등록'}</button>
-                </form>
-            </div>
-        """
+        
 
 
         html += comment_html
