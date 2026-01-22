@@ -1,4 +1,4 @@
-html_main = ''''
+html_main = '''
         <!DOCTYPE html>
         <html>
         <head>
@@ -8,6 +8,8 @@ html_main = ''''
         <center>
         <body>
         <form method="GET">
+                <br>
+                <br>
                 <label for="keyword">검색</label>
                 <input type="text" id="keyword" name="keyword" style="width:15%; padding: 5px;" placeholder="초기,과도기,후기 중 선택">
                 <button type="submit">등록</button>
