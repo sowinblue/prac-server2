@@ -45,7 +45,6 @@ class myhandler(BaseHTTPRequestHandler):
 
 
 
-
     def do_GET(self):
         if self.path.startswith("/static/"):
             file_path = "." + self.path  # 예: ./static/mid.png
@@ -128,15 +127,6 @@ class myhandler(BaseHTTPRequestHandler):
 
             
             comment_html += '<div style="width:100%; text-align:center;"><ul style="list-style:none; padding-left:0; margin:0;">'
-
-        #     comment_html += f"""
-        #         </ul>
-        #         <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
-        #             <input name="comment" value="{edit_text}">
-        #             {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
-        #             <button>{'수정' if edit_id else '등록'}</button>
-        #         </form>
-        # """
             
             
             # 댓글 렌더링
