@@ -130,15 +130,18 @@ class myhandler(BaseHTTPRequestHandler):
                 comment_html += "<li>"
                 comment_html += c['text']  # 삭제 표시 포함
                 # 삭제되지 않은 댓글만 삭제 버튼 표시
-                time_str = c['edited_at'] if c['edited_at'] else c['created_at']
-                edited_label = " (수정됨)" if c['edited_at'] else ""
-                comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
+                # time_str = c['edited_at'] if c['edited_at'] else c['created_at']
+                # edited_label = " (수정됨)" if c['edited_at'] else ""
+                # comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
 
                 if "삭제된 댓글입니다" not in c['text']:
+                    time_str = c['edited_at'] if c['edited_at'] else c['created_at']
+                    edited_label = " (수정됨)" if c['edited_at'] else ""
+                    comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
+
                     comment_html += f' <a href="/?delete={c["id"]}">삭제</a>'
                     comment_html += f' <a href="/?edit={c["id"]}">수정</a>'
                 comment_html += "</li>"
-            comment_html += "</ul></div>"
 
         
                 
