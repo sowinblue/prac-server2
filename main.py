@@ -7,12 +7,14 @@ from page_mid import html_mid
 from page_late import html_late
 from page_ex import no_keyword
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 class myhandler(BaseHTTPRequestHandler):
     comments = []  # [{"id":1, "text":"댓글내용"}, ...]
-    next_id = 1
+    next_id = 1  
+
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -62,6 +64,7 @@ class myhandler(BaseHTTPRequestHandler):
                 self.end_headers()
             return
         
+
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
         keyword = params.get("keyword", [""])[0]
@@ -70,9 +73,10 @@ class myhandler(BaseHTTPRequestHandler):
         edit_id = params.get('edit', [''])[0]
         
         
-        
         comment_html = ""
         edit_text = ""
+        
+        
         if edit_id:
             # 수정할 댓글 찾아서 input에 미리 채움
             for c in type(self).comments:
@@ -87,9 +91,6 @@ class myhandler(BaseHTTPRequestHandler):
                     c["text"] = f'<span style="color:red; text-decoration: line-through;">삭제된 댓글입니다</span>'
 
 
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html; charset=utf-8')
-        self.end_headers()
 
 
         if not keyword:
@@ -159,8 +160,12 @@ class myhandler(BaseHTTPRequestHandler):
             # 닫기 + 입력폼
             html += comment_html
 
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
 
         self.wfile.write(html.encode('utf-8'))
+
 
 
 host = 'localhost'
