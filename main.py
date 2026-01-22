@@ -44,6 +44,8 @@ class myhandler(BaseHTTPRequestHandler):
         self.end_headers()
 
 
+
+
     def do_GET(self):
         if self.path.startswith("/static/"):
             file_path = "." + self.path  # 예: ./static/mid.png
@@ -67,6 +69,9 @@ class myhandler(BaseHTTPRequestHandler):
         print("keyword:", keyword)  # 입력값 없으면 빈 문자열
         delete_id = params.get("delete", [""])[0]
         edit_id = params.get('edit', [''])[0]
+        
+        
+        
         comment_html = ""
         edit_text = ""
         if edit_id:
@@ -100,12 +105,9 @@ class myhandler(BaseHTTPRequestHandler):
             html = no_keyword(keyword)
         
         
-        
-
         #메인 페이지만
         # 메인 페이지만 댓글 렌더링
         if not keyword:
-
             comment_html = """
                 <hr>
                 <div style="
@@ -122,47 +124,50 @@ class myhandler(BaseHTTPRequestHandler):
                     <h3>댓글</h3>
                     <div style="width: 100%; text-align: center;">
                     <ul style="list-style:none; padding:0; margin:0;">
-                    </div>
             """
 
             
             comment_html += '<div style="width:100%; text-align:center;"><ul style="list-style:none; padding-left:0; margin:0;">'
 
-            comment_html += f"""
-                </ul>
-                <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
-                    <input name="comment" value="{edit_text}">
-                    {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
-                    <button>{'수정' if edit_id else '등록'}</button>
-                </form>
-            </div>
-        """
+        #     comment_html += f"""
+        #         </ul>
+        #         <form method="POST" style="width:100%; text-align:center; margin-top:8px;">
+        #             <input name="comment" value="{edit_text}">
+        #             {'<input type="hidden" name="edit_id" value="'+edit_id+'">' if edit_id else ''}
+        #             <button>{'수정' if edit_id else '등록'}</button>
+        #         </form>
+        # """
+            
             
             # 댓글 렌더링
             for c in type(self).comments:
                 comment_html += "<li>"
                 comment_html += c['text']  # 삭제 표시 포함
-                # 삭제되지 않은 댓글만 삭제 버튼 표시
-                # time_str = c['edited_at'] if c['edited_at'] else c['created_at']
-                # edited_label = " (수정됨)" if c['edited_at'] else ""
-                # comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
+                
 
+                # 삭제되지 않은 댓글만 삭제 버튼 표시
                 if "삭제된 댓글입니다" not in c['text']:
                     time_str = c['edited_at'] if c['edited_at'] else c['created_at']
                     edited_label = " (수정됨)" if c['edited_at'] else ""
                     comment_html += f"<span style='float:right; font-size:0.7em; color:#888;'>{time_str}{edited_label}</span>"
-
                     comment_html += f' <a href="/?delete={c["id"]}">삭제</a>'
                     comment_html += f' <a href="/?edit={c["id"]}">수정</a>'
                 comment_html += "</li>"
 
-        
+
+            comment_html += f"""
+                        </ul>
+                    </div>
+                    <form method="POST" style="width:100%; text-align:center; margin-top:15px;">
+                        <input name="comment" value="{edit_text}" style="width:70%; padding: 5px;" placeholder="댓글을 입력하세요">
+                        {('<input type="hidden" name="edit_id" value="'+edit_id+'">') if edit_id else ''}
+                        <button style="padding: 5px 10px;">{'수정' if edit_id else '등록'}</button>
+                    </form>
+                </div>
+            """
                 
             # 닫기 + 입력폼
-        
-
-
-        html += comment_html
+            html += comment_html
 
 
         self.wfile.write(html.encode('utf-8'))
