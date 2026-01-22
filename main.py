@@ -8,8 +8,7 @@ from page_late import html_late
 from page_ex import no_keyword
 
 
-
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 class myhandler(BaseHTTPRequestHandler):
     comments = []  # [{"id":1, "text":"댓글내용"}, ...]
